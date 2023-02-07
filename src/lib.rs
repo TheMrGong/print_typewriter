@@ -6,32 +6,33 @@
 //! Typing out "hello" with each character taking 10 milliseconds to be printed
 //! 
 //! ```
-//! use print_typewriter::{CharDurations, Writer};
-//! use std::time::Duration;
-//! use std::collections::HashMap;
-//! 
-//! let ten_millis = Duration::from_millis(10);
+//! use print_typewriter::{char_duration, println_typed};
 //!
-//! let chat_durations = CharDurations::new(ten_millis, HashMap::new());
-//! 
-//! Writer::print_typed(&chat_durations, &"hello".to_owned());
+//! let duration = char_duration!(default 10.ms);
+//! println_typed!(duration, "hello");
 //! ```
 //! 
 //! Typing "hello world" with each word being typed instantly and each space taking 250 milliesconds
 //! 
 //! ```
-//! use print_typewriter::{CharDurations, Writer};
-//! use std::time::Duration;
-//! use std::collections::HashMap;
-//! 
-//! let two_fifty_millis = Duration::from_millis(250);
+//! use print_typewriter::{char_duration, println_typed};
 //!
-//! let chat_durations = CharDurations::new(Duration::ZERO, HashMap::from([(' ', two_fifty_millis)]));
+//! let duration = char_duration!(' '->250.ms);
+//! println_typed!(duration, "hello world");
+//! ```
 //! 
-//! Writer::print_typed(&chat_durations, &"hello".to_owned());
+//! Typing a formatted string, "hello {} world" with spaces taking 250 milliseconds, periods taking 1 second, and everything else taking 90
+//!
+//! ```
+//! use print_typewriter::{char_duration, println_typed};
+//!
+//! let duration = char_duration!(default 90.ms, ' '->250.ms, '.'->1.s);
+//! let beans = "beans";
+//! println_typed!(duration, "hello {} world", beans);
 //! ```
 
 use std::{time::Duration, collections::HashMap, thread, io::{self, Write}};
+mod macros;
 
 /// A `CharDurations` type to represent how long [`Writer::print_typed`] should take
 /// to print out the inputted [`String`]
@@ -79,6 +80,7 @@ pub struct CharDurations {
     pub default_duration: Duration,
     pub specific_duration: HashMap<char, Duration>
 }
+
 
 impl CharDurations {
     /// Constructs a new `CharDurations` that is initialized with random keys.

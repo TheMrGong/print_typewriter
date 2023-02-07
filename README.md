@@ -7,27 +7,27 @@ Simple learning project for a Rust Library that lets you print strings character
 Typing out "hello" with each character taking 10 milliseconds to be printed
 
 ```rust
-use print_typewriter::{CharDurations, Writer};
-use std::time::Duration;
-use std::collections::HashMap;
+use print_typewriter::{char_duration, println_typed};
 
-let ten_millis = Duration::from_millis(10);
-
-let chat_durations = CharDurations::new(ten_millis, HashMap::new());
-
-Writer::print_typed(&chat_durations, &"hello".to_owned());
+let duration = char_duration!(default 10.ms);
+println_typed!(duration, "hello");
 ```
 
 Typing "hello world" with each word being typed instantly and each space taking 250 milliesconds
 
 ```rust
-use print_typewriter::{CharDurations, Writer};
-use std::time::Duration;
-use std::collections::HashMap;
+use print_typewriter::{char_duration, println_typed};
 
-let two_fifty_millis = Duration::from_millis(250);
+let duration = char_duration!(' '->250.ms);
+println_typed!(duration, "hello");
+```
 
-let chat_durations = CharDurations::new(Duration::ZERO, HashMap::from([(' ', two_fifty_millis)]));
+Typing a formatted string, "hello {} world" with spaces taking 250 milliseconds, periods taking 1 second, and everything else taking 90
 
-Writer::print_typed(&chat_durations, &"hello".to_owned());
+```rust
+use print_typewriter::{char_duration, println_typed};
+
+let duration = char_duration!(default 90.ms, ' '->250.ms, '.'->1.s);
+let beans = "beans";
+println_typed!(duration, "hello {} world", beans);
 ```
