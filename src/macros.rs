@@ -107,3 +107,39 @@ macro_rules! println_typed {
         }
     };
 }
+
+/// Prints a formatted string using the provided [`CharDurations`]
+/// Uses [`Writer::print_typed`] to print to the standard output one character at a time, without newline.
+/// 
+/// # Examples
+///
+/// - Printing "hello world" one word at a time
+///
+/// ```
+/// use print_typewriter::{char_duration, print_typed};
+/// 
+/// let duration = char_duration!(' '->150.ms);
+/// print_typed!(duration, "hello world");
+/// ```
+///
+/// - Printing a formatted string, one character at a time
+///
+/// ```
+/// use print_typewriter::{char_duration, print_typed};
+/// 
+/// let example_variable = "beans";
+/// let duration = char_duration!(default 50.ms);
+/// print_typed!(duration, "hello {} world", example_variable);
+/// ```
+/// 
+/// [`Writer::print_typed`]: struct.Writer.html#method.print_typed
+/// [`CharDurations`]: crate::CharDurations
+///
+#[macro_export]
+macro_rules! print_typed {
+    ($duration:tt, $($arg:tt)*) => {
+        {
+            $crate::Writer::print_typed(&$duration, &format!($($arg)*));
+        }
+    };
+}
