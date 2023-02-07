@@ -147,7 +147,6 @@ impl CharDurations {
 /// use std::collections::HashMap;
 /// 
 /// let ten_millis = Duration::from_millis(10);
-/// let one_hundred_millis = Duration::from_millis(100);
 ///
 /// let chat_durations = CharDurations::new(ten_millis, HashMap::new());
 /// 
