@@ -1,6 +1,6 @@
 [package]
 name = "print_typewriter"
-version = "0.1.3"
+version = "0.1.4"
 edition = "2021"
 authors = ["TheMrGong"]
 description = "Provides an easy way to print strings on character at a time."
