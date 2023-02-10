@@ -99,15 +99,14 @@ impl CharDurations {
     /// let s = CharDurations::new(Duration::from_millis(40), HashMap::from([]));
     /// ```
     #[inline]
-    pub fn new(dur: Duration, specific_durations: HashMap<char, Duration>) -> Self {
-        CharDurations {
+    #[must_use]
+    pub const fn new(dur: Duration, specific_durations: HashMap<char, Duration>) -> Self {
+        Self {
             default_duration: dur,
             specific_duration: specific_durations,
         }
     }
-}
 
-impl CharDurations {
     /// Returns the duration to wait for a character
     ///
     /// Will return [`default duration`] if supplied character isn't in the [`specific duration`] [`HashMap`] as a key
@@ -132,11 +131,9 @@ impl CharDurations {
     ///
     /// ```
     #[inline]
+    #[must_use]
     pub fn duration(&self, ch: char) -> &Duration {
-        match self.specific_duration.get(&ch) {
-            Some(dur) => dur,
-            _ => &self.default_duration,
-        }
+        self.specific_duration.get(&ch).map_or(&self.default_duration, |dur| dur)
     }
 }
 
@@ -191,7 +188,7 @@ impl Writer {
         for l in str.chars() {
             let wait_duration = durations.duration(l);
             print!("{l}");
-            if let Ok(()) = io::stdout().flush() {
+            if matches!(io::stdout().flush(), Ok(())) {
                 if wait_duration.as_millis() > 0 {
                     thread::sleep(*wait_duration);
                 }
